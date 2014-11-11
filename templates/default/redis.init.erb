@@ -59,6 +59,16 @@ case "$1" in
         then
                 echo "$PIDFILE exists, process is already running or crashed"
         else
+              <% if node[:redisio][:disable_transparent_hugepage] -%>
+                # Disable THP per the recommendation on http://redis.io/topics/latency
+                if test -f /sys/kernel/mm/transparent_hugepage/enabled; then
+                  echo never > /sys/kernel/mm/transparent_hugepage/enabled
+                fi
+                if test -f /sys/kernel/mm/transparent_hugepage/defrag; then
+                  echo never > /sys/kernel/mm/transparent_hugepage/defrag
+                fi
+              <% end -%>
+
                 echo "Starting Redis server..."
                 eval $EXEC
         fi
