@@ -44,6 +44,7 @@ def configure
 
     recipe_eval do
       sentinel_name = current['name'] || current['port']
+      master_name   = sentinel_name
       sentinel_name = "sentinel_#{sentinel_name}"
       piddir = "#{base_piddir}/#{sentinel_name}"
 
@@ -104,7 +105,7 @@ def configure
         action config_action
         variables({
           :piddir                 => piddir,
-          :name                   => sentinel_name,
+          :name                   => master_name,
           :job_control            => node['redisio']['job_control'],
           :sentinel_port          => current['sentinel_port'],
           :masterip               => current['master_ip'],
